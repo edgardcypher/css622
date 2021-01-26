@@ -1,4 +1,4 @@
-package Accounts;
+package Constants;
 
 public enum AccountStatus {
     Active,

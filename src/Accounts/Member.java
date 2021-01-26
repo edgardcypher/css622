@@ -2,8 +2,10 @@ package Accounts;
 
 import java.util.Date;
 
+import Constants.AccountStatus;
+
 public class Member extends Account {
-	private Date dateOfBecomingMember;
+	private String dateOfBecomingMember;
 	private int totalBookBorrored;
 	
 	
@@ -15,9 +17,9 @@ public class Member extends Account {
 	 * @param dateOfBecomingMember
 	 * @param totalBookBorrored
 	 */
-	public Member(Person person, String id, String password, AccountStatus status, Date dateOfBecomingMember,
-			int totalBookBorrored) {
-		super(person, id, password, status);
+	public Member(Person person, String id, String password, AccountStatus status, String dateOfBecomingMember,
+			int totalBookBorrored,String typeAccount) {
+		super(person, id, password, status, typeAccount);
 		this.dateOfBecomingMember = dateOfBecomingMember;
 		this.totalBookBorrored = totalBookBorrored;
 	}
@@ -29,12 +31,12 @@ public class Member extends Account {
 	}
 
 
-	public Date getDateOfBecomingMember() {
+	public String getDateOfBecomingMember() {
 		return dateOfBecomingMember;
 	}
 
 
-	public void setDateOfBecomingMember(Date dateOfBecomingMember) {
+	public void setDateOfBecomingMember(String dateOfBecomingMember) {
 		this.dateOfBecomingMember = dateOfBecomingMember;
 	}
 

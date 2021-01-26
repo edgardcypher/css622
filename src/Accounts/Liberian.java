@@ -1,9 +1,11 @@
 package Accounts;
 
+import Constants.AccountStatus;
+
 public class Liberian extends Account {
 	
-	public Liberian(Person person, String id, String password, AccountStatus status) {
-		super(person, id, password, status);
+	public Liberian(Person person, String id, String password, AccountStatus status, String accountType) {
+		super(person, id, password, status, accountType);
 	}
 
 	public  boolean createAnAccount() {
