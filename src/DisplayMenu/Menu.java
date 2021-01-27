@@ -9,7 +9,7 @@ public abstract class Menu {
 	
 	public void displayLogInMenu(Scanner scan, String user) {
 		this.setUser(user);
-		System.out.println(this.getUser() + " Log In:\n");
+		System.out.println(" \nLog In as "+ this.getUser());
 		System.out.print("Id:");
 		String memberId = scan.next();
 		this.setMemberId(memberId);
