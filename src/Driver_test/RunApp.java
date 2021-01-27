@@ -59,7 +59,9 @@ public class RunApp {
 			if(memberMenu.checkCredential(member_1Account.getId(), member_1Account.getPassword())) {
 				System.out.println("you are sucessful logged in as a liberian");
 				memberMenu.displayMenu();
-				member_1Account.closeAccount();
+				Member member = (Member)member_1Account; // downcasting
+				member.borrowBook();
+				member.closeAccount();
 				System.exit(0);
 			} else {
 				System.out.println("sorry wrong credential");

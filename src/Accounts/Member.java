@@ -50,5 +50,9 @@ public class Member extends Account {
 		this.totalBookBorrored = totalBookBorrored;
 	}
 	
+	public void borrowBook() {
+		System.out.println("I am borrowing a book from Library");
+	}
+	
 	
 }
