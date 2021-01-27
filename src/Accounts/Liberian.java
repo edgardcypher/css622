@@ -12,7 +12,13 @@ public class Liberian extends Account {
 		System.out.println("membership account  or liberian account create successfully");
 		return true;
 	}
-	public void addBook() {}
-	public void updateBook() {}
-	public void deleteBook() {}
+	public void addBook() {
+		System.out.println("book has been added");
+	}
+	public void updateBook() {
+		System.out.println("book has been updated");
+	}
+	public void deleteBook() {
+		System.out.println("book has been delete");
+	}
 }

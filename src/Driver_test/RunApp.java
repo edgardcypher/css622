@@ -44,6 +44,10 @@ public class RunApp {
 			if(liberianMenu.checkCredential(liberianAccount.getId(), liberianAccount.getPassword())) {
 				System.out.println("you are sucessful logged in as a liberian");
 				liberianMenu.displayMenu();
+				Liberian liberian = (Liberian)liberianAccount; // downcasting
+				liberian.addBook();
+				liberian.updateBook();
+				liberian.closeAccount();
 				System.exit(0);
 			} else {
 				System.out.println("sorry wrong credential");
@@ -55,6 +59,7 @@ public class RunApp {
 			if(memberMenu.checkCredential(member_1Account.getId(), member_1Account.getPassword())) {
 				System.out.println("you are sucessful logged in as a liberian");
 				memberMenu.displayMenu();
+				member_1Account.closeAccount();
 				System.exit(0);
 			} else {
 				System.out.println("sorry wrong credential");
