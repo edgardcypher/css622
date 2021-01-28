@@ -1,6 +1,9 @@
 package Accounts;
 
+import java.util.List;
+
 import Constants.AccountStatus;
+import manageBook.Book;
 
 public class Liberian extends Account {
 	
@@ -12,8 +15,9 @@ public class Liberian extends Account {
 		System.out.println("membership account  or liberian account create successfully");
 		return true;
 	}
-	public void addBook() {
-		System.out.println("book has been added");
+	public void addBook(List<Book> listBooks ,Book bookToAdd ) {
+		listBooks.add(bookToAdd);
+		System.out.println("Book was sucessfully added");
 	}
 	public void updateBook() {
 		System.out.println("book has been updated");
