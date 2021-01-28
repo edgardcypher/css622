@@ -2,6 +2,11 @@ package DisplayMenu;
 
 import java.util.Scanner;
 
+/*Represent the parent class of both classes
+ * DisplayLiberianMainMenu and DisplayMemberMainMenu
+ * this class has an abstract method displayMenu()
+ * which will be implemented by both child classes
+ * */
 public abstract class Menu {
 	private String memberId;
 	private String password;
@@ -25,7 +30,7 @@ public abstract class Menu {
 		return false;
 		
 	}
-	public abstract void displayMenu();
+	public abstract void displayMenu();// abstract method will be implemented by child classes
 	
 	public String getMemberId() {
 		return memberId;
@@ -45,5 +50,4 @@ public abstract class Menu {
 	public void setUser(String user) {
 		this.user = user;
 	}
-
 }

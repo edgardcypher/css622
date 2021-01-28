@@ -2,6 +2,12 @@ package Accounts;
 
 import Constants.AccountStatus;
 
+/*This class represent a parent abstract class and it has 
+ * two children class Member and Liberian.This class has an
+ * abstract method which will be implemented by both class
+ * Member and Liberian
+ * */
+
 public abstract class Account {
   private Person person;
   private String id;
@@ -11,6 +17,7 @@ public abstract class Account {
   
   
 	public Account(Person person, String id, String password, AccountStatus status, String typeAcc) {
+		/*this constructor will help to instantiate child classes*/
 		super();
 		this.person = person;
 		this.id = id;
@@ -70,8 +77,5 @@ public abstract class Account {
 	public void setTypeAccount(String typeAccount) {
 		this.typeAccount = typeAccount;
 	}
-	  
-	  
-
   
 }

@@ -74,7 +74,7 @@ public class RunApp {
 	}
 	
 	private static int theLogger(Scanner scanner) {
-		System.out.println(" Log as:\n");
+		System.out.println(" Please what kind of user would you like to Log as?:\n");
 		System.out.println(" 1- Liberian:\n");
 		System.out.println(" 2- Member:\n");
 		System.out.print(" Enter your choice 1 or 2:");
