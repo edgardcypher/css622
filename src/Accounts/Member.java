@@ -1,6 +1,7 @@
 package Accounts;
 
 import java.util.Date;
+import java.util.List;
 
 import Constants.AccountStatus;
 
@@ -17,9 +18,9 @@ public class Member extends Account {
 	 * @param dateOfBecomingMember
 	 * @param totalBookBorrored
 	 */
-	public Member(Person person, String id, String password, AccountStatus status, String dateOfBecomingMember,
+	public Member(Person person, String id, String password, String username, AccountStatus status, String dateOfBecomingMember,
 			int totalBookBorrored,String typeAccount) {
-		super(person, id, password, status, typeAccount);
+		super(person, id, password,username, status, typeAccount);
 		this.dateOfBecomingMember = dateOfBecomingMember;
 		this.totalBookBorrored = totalBookBorrored;
 	}
@@ -53,6 +54,5 @@ public class Member extends Account {
 	public void borrowBook() {
 		System.out.println("I am borrowing a book from Library");
 	}
-	
-	
+
 }

@@ -15,6 +15,7 @@ public class BookCatalog implements SearchBook {
 	}
 	@Override
 	public List<Book> searchByTitle(String title) {
+		// Postcondition: a list of books listBooks  which match the  title criteria
 		List<Book> listBooks =  new ArrayList<>();
 		for (Book book : listBooks) {
 			if(book !=null && book.getTitle().equals(title)) {
@@ -26,6 +27,7 @@ public class BookCatalog implements SearchBook {
 
 	@Override
 	public List<Book> searchByAuthor(String author) {
+		// Postcondition: a list of books listBooks which match the author criteria
 		List<Book> listBooks =  new ArrayList<>();
 		for (Book book : listBooks) {
 			if(book !=null && book.getAuthor().equals(author)) {
@@ -37,6 +39,7 @@ public class BookCatalog implements SearchBook {
 
 	@Override
 	public List<Book> searchBySubject(String subject) {
+		// Postcondition: a list of books listBooks which match the subject criteria
 		List<Book> listBooks =  new ArrayList<>();
 		for (Book book : listBooks) {
 			if(book !=null && book.getSubject().equals(subject)) {
@@ -48,6 +51,7 @@ public class BookCatalog implements SearchBook {
 
 	@Override
 	public List<Book> searchByPublicationDate(LocalDateTime publishDate) {
+		// Postcondition: a list of books listBooks which match the subject criteria
 		List<Book> listBooks =  new ArrayList<>();
 		for (Book book : listBooks) {
 			if(book !=null && book.getPublicationDate().equals(publishDate)) {
@@ -56,5 +60,14 @@ public class BookCatalog implements SearchBook {
 		}
 		return listBooks;
 	}
+	
+	public List<Book> getListBooks() {
+		return listBooks;
+	}
+	public void setListBooks(List<Book> listBooks) {
+		this.listBooks = listBooks;
+	}
+	
+	
 
 }

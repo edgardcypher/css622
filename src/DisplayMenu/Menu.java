@@ -1,6 +1,9 @@
 package DisplayMenu;
 
+import java.util.LinkedList;
 import java.util.Scanner;
+
+import Accounts.Credential;
 
 /*Represent the parent class of both classes
  * DisplayLiberianMainMenu and DisplayMemberMainMenu
@@ -23,12 +26,13 @@ public abstract class Menu {
 		this.setPassword(pwd);
 		
 	}
-	public boolean checkCredential(String id, String password) {
-		if(this.getMemberId().equals(id) && this.getPassword().equals(password)) {
-			return true;
+	public boolean checkCredential(LinkedList<Credential> credentials,String id, String password) {
+		for (Credential credential : credentials) {
+			if(credential.getMemberId().equals(id) && credential.getPwd().equals(password)) {
+				return true;
+			}
 		}
 		return false;
-		
 	}
 	public abstract void displayMenu();// abstract method will be implemented by child classes
 	

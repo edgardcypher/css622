@@ -1,5 +1,7 @@
 package Accounts;
 
+import java.util.List;
+
 import Constants.AccountStatus;
 
 /*This class represent a parent abstract class and it has 
@@ -11,12 +13,13 @@ import Constants.AccountStatus;
 public abstract class Account {
   private Person person;
   private String id;
+  private String username;
   private String password;
   private AccountStatus status;
   private String typeAccount;
   
   
-	public Account(Person person, String id, String password, AccountStatus status, String typeAcc) {
+	public Account(Person person, String id, String password, String username, AccountStatus status, String typeAcc) {
 		/*this constructor will help to instantiate child classes*/
 		super();
 		this.person = person;
@@ -24,6 +27,7 @@ public abstract class Account {
 		this.password = password;
 		this.status = status;
 		this.typeAccount = typeAcc;
+		this.username = username;
 	}
 		
 	  public boolean resetPassword() {
@@ -35,9 +39,7 @@ public abstract class Account {
 		  System.out.println("account close successfully");
 		  return true;
 	  }
-	  
-	  abstract boolean createAnAccount();		
-	
+	  	
 	  public Person getPerson() {
 		return person;
 	  }
@@ -77,5 +79,27 @@ public abstract class Account {
 	public void setTypeAccount(String typeAccount) {
 		this.typeAccount = typeAccount;
 	}
-  
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	protected boolean isUsernameExist(List<Account> listAccounts, String  username) {
+		//Postcondition: return true if the account username already exists in the list unless it returns false
+		boolean foundAnAccount = false;
+			for (Account account : listAccounts) {
+				if(account.getUsername().equals(username)) {
+					foundAnAccount = true;
+					return foundAnAccount;
+				}else {
+					continue;
+				}
+			}
+			return foundAnAccount;
+	}
+	
 }
