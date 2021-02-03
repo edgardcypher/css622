@@ -2,18 +2,30 @@ package manageBook;
 
 import java.time.LocalDateTime;
 
+import manageBook.BookItem.BookStatus;
+
 // represent a book which is borrowed
 
 public class BookItem extends Book {
-  private String bookId;
+    private String bookId;
 	private LocalDateTime dateOfPurchase;
 	private int rackNumber;
 	private String rackLocation;
 	private String status;
-  
-	public BookItem() {}
+	public enum BookStatus {
+	    available,
+		borrowed
+	};
+
 	
 
+	/**
+	 * 
+	 */
+	public BookItem() {
+		super();
+		this.setStatus(BookStatus.available.toString());
+	}
 
 	/**
 	 * @param iSBN
@@ -26,13 +38,17 @@ public class BookItem extends Book {
 	 * @param price
 	 * @param publicationDate
 	 */
-	public BookItem(String iSBN, String title, String author, String subject, String publisher, String language,
-			String format, String price, LocalDateTime publicationDate) {
-		super(iSBN, title, author, subject, publisher, language, format, price, publicationDate);
-		// TODO Auto-generated constructor stub
+	public BookItem(int iSBN, String title, String author, String subject, String publisher, String language,int totalPages,
+			String format, String price, LocalDateTime publicationDate,String bookId, LocalDateTime dateOfPurchase, 
+			int rackNumber, String rackLocation) {
+		super(iSBN, title, author, subject, publisher, language,totalPages,format, price, publicationDate);
+		this.setBookId(bookId);
+		this.setDateOfPurchase(dateOfPurchase);
+		this.setRackNumber(rackNumber);
+		this.setRackLocation(rackLocation);
+		this.setStatus(BookStatus.available.toString());
+		
 	}
-
-
 
 	public String getBookId() {
 		return bookId;

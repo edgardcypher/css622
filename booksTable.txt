@@ -1,0 +1,4 @@
+book1,9781593275846,Eloquent JavaScript Second Edition,Marijn Haverbeke,programming,No Starch Press,English,345,5,$400,12/14/2014,12/14/2015,Hardcover,5C4L2,available	
+book2,9781449331818,Learning JavaScript Design Patterns,Addy Osmani,programming,O'Reilly Media,English,254,4,$200,07/01/2012,02/01/2015,paperback,4C1L4,available
+book3,9781419231818,Learning Cooking,Addy Osmani,Cooking,Savior Red,English,215,7,$100,07/01/2010,12/01/2011,paperback,7C1L4,available
+book4,9781419231811,Learning Dancing,Joe Doe,dancing,O'reilly,English,100,5,$100,10/11/2001,10/12/2010,hardcover,4C1L,available

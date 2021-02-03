@@ -34,7 +34,7 @@ public abstract class Menu {
 		}
 		return false;
 	}
-	public abstract void displayMenu();// abstract method will be implemented by child classes
+	public abstract void displayMenu(String username);// abstract method will be implemented by child classes
 	
 	public String getMemberId() {
 		return memberId;

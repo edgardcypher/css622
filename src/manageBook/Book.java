@@ -3,7 +3,7 @@ package manageBook;
 import java.time.LocalDateTime;
 // represent a book
 public class Book {
-	private String ISBN;
+	private long ISBN;
 	private String title;
 	private String Author;
 	private String subject;
@@ -12,6 +12,7 @@ public class Book {
 	private String format;
 	private LocalDateTime publicationDate;
 	private String price;
+	private int pages;
 	
 	
 	public Book() {}
@@ -26,7 +27,7 @@ public class Book {
 	 * @param format
 	 * @param price
 	 */
-	public Book(String iSBN, String title, String author, String subject, String publisher, String language,
+	public Book(int iSBN, String title, String author, String subject, String publisher, String language,int pageNber,
 			String format, String price, LocalDateTime publicationDate) {
 		super();
 		ISBN = iSBN;
@@ -38,15 +39,16 @@ public class Book {
 		this.format = format;
 		this.price = price;
 		this.publicationDate = publicationDate;
+		this.pages = pageNber;
 	}
 
 
-	public String getISBN() {
+	public long getISBN() {
 		return ISBN;
 	}
 
 
-	public void setISBN(String iSBN) {
+	public void setISBN(long iSBN) {
 		ISBN = iSBN;
 	}
 
@@ -131,7 +133,13 @@ public class Book {
 	public void setPublicationDate(LocalDateTime publicationDate) {
 		this.publicationDate = publicationDate;
 	}
-	
 
+	public int getPages() {
+		return pages;
+	}
+
+	public void setPages(int pages) {
+		this.pages = pages;
+	}
 	
 }

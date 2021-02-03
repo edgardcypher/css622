@@ -2,6 +2,7 @@ package Driver_test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import manageBook.BookItem;
 public class RunApp {
 
 	public static void main(String[] args) {
-		List<Book> allBooks = new ArrayList<>();
+		List<Book> allBooks = new ArrayList<>();// will hold information about each book
 		// create a list of credential	
 		LinkedList<Credential> credentialList = new LinkedList<>();//create an empty list of credential
 		Scanner scanner = new Scanner(System.in);
@@ -48,29 +49,42 @@ public class RunApp {
 		Account liberianAccount = new Liberian(liberianPerson,"lib0231","alpha01","Jmagaret",AccountStatus.Active,"Liberian");
 		Account member_1Account = new Member(memberPerson_1,"memb123","margared21","Jora",AccountStatus.Active,dateOfBecomingMember1,1,"Member");
 		Account member_2Account = new Member(memberPerson_2,"memb124","nathan21","t_nathan",AccountStatus.Active,dateOfBecomingMember2,1,"Member");
-		int choice = theLogger(scanner);
-		readAccountCredential(credentialList,scanner);
+		
+		int choice = 0;
+		try {
+			choice = theLogger(scanner);
+		} catch (BadInputException e) {
+			System.out.println(e.getMessage());
+		}
+		readAccountCredential(credentialList,scanner);// read all credentials from file
+		try {
+			readBookTable(allBooks,scanner);// read all books information from file
+		} catch (BadInputException e) {
+			System.out.println(e.getMessage());
+
+		}
+		
 		if(choice == 1) {
 			Menu liberianMenu = new DisplayLiberianMainMenu();
 			liberianMenu.displayLogInMenu(scanner,"Liberian");
 			if(liberianMenu.checkCredential(credentialList,liberianMenu.getMemberId(), liberianMenu.getPassword())) {
 				System.out.println("you are sucessful logged in as a liberian");
-				liberianMenu.displayMenu(); // polymorphism
-				Liberian liberian = (Liberian)liberianAccount; // downcasting
-//				liberian.addBook(allBooks,new BookItem());
-//				liberian.updateBook(allBooks,new BookItem());
-//				liberian.closeAccount();
-				System.exit(0);
+				liberianMenu.displayMenu(liberianAccount.getUsername()); // polymorphism
+				try {
+					handleUserChoice(scanner,liberianAccount,allBooks);
+				} catch (BadInputException e) {
+					System.out.println(e.getMessage());
+				}
 			} else {
 				System.out.println("sorry wrong credential");
 				System.exit(0);
 			}
-		}else if (choice == 1)  {
+		}else if (choice == 2)  {
 			Menu memberMenu = new DisplayMemberMainMenu();
 			memberMenu.displayLogInMenu(scanner,"Member");
 			if(memberMenu.checkCredential(credentialList,memberMenu.getMemberId(), memberMenu.getPassword())) {
 				System.out.println("you are sucessful logged in as a liberian");
-				memberMenu.displayMenu(); // polymorphism
+				memberMenu.displayMenu(member_1Account.getUsername()); // polymorphism
 				Member member = (Member)member_1Account; // downcasting
 				member.borrowBook();
 				member.closeAccount();
@@ -88,7 +102,7 @@ public class RunApp {
 
 	}
 	
-	private static int theLogger(Scanner scanner) {
+	private static int theLogger(Scanner scanner) throws BadInputException {
 		//predondition: a scanner object which will help to read the file
 		//postcondition: a int representing user choice 
 		
@@ -100,11 +114,11 @@ public class RunApp {
 		try {
 			choice = scanner.nextInt();
 		}catch (InputMismatchException e) { // an exception will be raised if the user enter a string or character
-			System.out.println("the program will stop here because you entered a non numeric character");
-			System.exit(0);
+			throw new BadInputException(); // call user-defined exception
 		}
 		return choice;
 	}
+	
 	/*
 	 * Read account_credentials_db.txt file to find all the saved credentials
 	 * */
@@ -113,12 +127,13 @@ public class RunApp {
 		//predondition2: a scanner object which will help to read the file
 		//Postcondition: return a list of all credentials found in the file
 		
+		File file;
 		try {
-			File file = new File("account_credentials_db.txt");// create a file object with the pathfilename 
+			 file = new File("account_credentials_db.txt");// create a file object with the pathfilename 
 			scanner = new Scanner(file);// read the file
 			
 		} catch (FileNotFoundException e) {// return a catch in case the file is not found
-			System.out.println("file not found");
+			System.out.println("file for credentials not found");
 		}
 		if(scanner != null) {
 			while (scanner.hasNextLine()) {// go through each file line
@@ -132,6 +147,131 @@ public class RunApp {
 				CredentialList.add(credential);
 			}
 		}
+	}
+	
+	
+	/*
+	 * Read account_credentials_db.txt file to find all the saved credentials
+	 * */
+	private static void readBookTable(List<Book> listOfbooks,Scanner scanner) throws BadInputException {
+		//Precondition1: a variable list which will hold all books information found in the file
+		//predondition2: a scanner object which will help to read the file
+		//Postcondition: return a list of all books found in the file
+		
+		try {
+			File file = new File("booksTable.txt");// create a file object with the pathfilename 
+			scanner = new Scanner(file);// read the file
+			scanner.useDelimiter(",");
+
+			if(scanner != null) {
+				while (scanner.hasNextLine()) {// go through each file line
+					String thisLine = scanner.nextLine();
+					String[] words = thisLine.split(",");
+					BookItem bookItem = new BookItem();// bookItem object where each information retrieved wiil be saved
+					
+					String bookId = words[0];
+					bookItem.setBookId(bookId);
+					
+					String isbn = words[1];
+					bookItem.setISBN(Long.parseLong(isbn));
+
+					String title = words[2];
+					bookItem.setTitle(title);
+										
+					String author = words[3];
+					bookItem.setAuthor(author);
+					
+					String subject = words[4];
+					bookItem.setSubject(subject);
+					
+					String publisher = words[5];
+					bookItem.setPublisher(publisher);
+					
+					String language = words[6];
+					bookItem.setLanguage(language);
+					
+					String totalPages = words[7];
+					bookItem.setPages(Integer.parseInt(totalPages));
+					
+					String rackNumber = words[8];
+					bookItem.setRackNumber(Integer.parseInt(rackNumber));
+					
+					String price = words[9];
+					bookItem.setPrice(price);
+					
+					String publicationDate = words[10];
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+					bookItem.setPublicationDate(LocalDate.parse(publicationDate, formatter).atStartOfDay());
+					
+					String dateOfpurchase = words[11];
+					bookItem.setDateOfPurchase(LocalDate.parse(dateOfpurchase, formatter).atStartOfDay());
+					
+					String format = words[12];
+					bookItem.setFormat(format);
+					
+					String bookLocation = words[13];
+					bookItem.setRackLocation(bookLocation);
+					
+					String avaibilityBook = words[14];
+					bookItem.setStatus(avaibilityBook);
+					
+					listOfbooks.add(bookItem);
+				}
+			}
+		} catch (FileNotFoundException e) {// return a catch in case the file is not found
+			System.out.println("file of books information is not found");
+		}catch (InputMismatchException e) {// return a catch in case the wrong type of variable is read
+			throw new BadInputException(); 
+		}
+	}
+	
+	private static void handleUserChoice(Scanner scanner , Account user,List<Book> listBooks) throws BadInputException {
+		int choice = 0;
+		try {
+			choice = scanner.nextInt();
+		}catch (InputMismatchException e) {
+			throw new BadInputException(); 
+		}
+		
+		System.out.println("you entered: "+choice);
+		if(user instanceof Liberian) {
+			switch (choice) {
+			case 1:
+				((Liberian) user).addBook(listBooks, scanner);
+				break;
+			case 2:
+//				((Liberian) user).updateBook(listBooks, bookToUpdate)
+				break;
+			case 3:
+//				((Liberian) user).deleteBook(listBooks, bookId);
+				break;
+			case 4:
+				((Liberian) user).issueBook();
+				break;
+			case 5:
+				((Liberian) user).checkOverDueBook();
+				break;
+			case 6:
+//				((Liberian) user).createAnAccount(listOfAccounts, accountToCreate);
+				break;
+			case 7:
+//				((Liberian) user).deleteAnAccount(listOfAccounts, accountToDeleteId)
+				break;
+			case 8:
+				((Liberian) user).logout();
+				System.out.println("you log out successfully");
+			default:
+				System.out.println("you entered a wrong choice. the program will stop.Thank you");
+				System.exit(0);
+				break;
+			}
+			
+		}
+		else if(user instanceof Member) {
+			
+		}
+		
+		
 	}
 
 }
