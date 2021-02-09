@@ -10,7 +10,7 @@ import Constants.AccountStatus;
  * Member and Liberian
  * */
 
-public abstract class Account {
+public abstract class Account implements Comparable<String> {
   private Person person;
   private String id;
   private String username;
@@ -87,6 +87,8 @@ public abstract class Account {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
+	
 
 	protected boolean isUsernameExist(List<Account> listAccounts, String  username) {
 		//Postcondition: return true if the account username already exists in the list unless it returns false
@@ -101,5 +103,24 @@ public abstract class Account {
 			}
 			return foundAnAccount;
 	}
+	
+	@Override
+	public int compareTo(String name) {
+		//Precondition the name which is searched is passed as argument
+		//Post condition will return 1 if the string which is searched is contained in the name
+		// unless 0 will be returned.
+		if(this.person.getName().toLowerCase().equals(name.toLowerCase()) || this.person.getName().toLowerCase().matches(".*"+name.toLowerCase()+".*")) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "Account type: "+this.getTypeAccount()+" id: "+this.getId()+" Username: "+this.getUsername()+
+				" Name: "+this.getPerson().getName()+" Phone Number: "+this.getPerson().getPhoneNumber()+" Email: "+this.getPerson().getEmail()+" status: "+ this.getStatus();
+	}
+
 	
 }

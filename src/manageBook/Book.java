@@ -2,7 +2,7 @@ package manageBook;
 
 import java.time.LocalDateTime;
 // represent a book
-public class Book {
+public class Book implements Comparable<String> {
 	private long ISBN;
 	private String title;
 	private String Author;
@@ -140,6 +140,22 @@ public class Book {
 
 	public void setPages(int pages) {
 		this.pages = pages;
+	}
+
+	@Override
+	public int compareTo(String name) {
+		//Precondition the name which is searched is passed as argument
+		//Post condition will return 1 if the string which is searched is contained in the name
+		// unless 0 will be returned.
+		if(this.getAuthor().toLowerCase().equals(name.toLowerCase()) || this.getAuthor().toLowerCase().matches(".*"+name.toLowerCase()+".*")) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "The bookid "+this.getAuthor()+" has been found";
 	}
 	
 }

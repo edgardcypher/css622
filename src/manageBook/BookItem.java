@@ -90,5 +90,12 @@ public class BookItem extends Book {
 		this.status = status;
 	}
 	
+	@Override
+	public String toString() {
+		return "The bookid: "+this.getBookId()+" ISBN: "+this.getISBN()+" title: "+this.getTitle()+" author: "+this.getAuthor()
+		+" subject: "+this.getSubject()+" publisher: "+this.getPublisher()+" language: "+this.getLanguage()+" price: "+this.getPrice()
+		+" pages: "+this.getPages()+" rack number: "+this.getRackNumber()+" publication date: "+this.getPublicationDate()+" purchase date: "
+		+this.getDateOfPurchase()+" format: "+this.getFormat()+" book location: "+this.getRackLocation()+" status: "+this.getStatus() ;
+	}
 	
 }

@@ -28,7 +28,7 @@ import manageBook.BookItem;
 public class RunApp {
 
 	public static void main(String[] args) {
-		List<Book> allBooks = new ArrayList<>();// will hold information about each book
+		List<BookItem> allBooks = new ArrayList<>();// will hold information about each book
 		// create a list of credential	
 		LinkedList<Credential> credentialList = new LinkedList<>();//create an empty list of credential
 		Scanner scanner = new Scanner(System.in);
@@ -46,9 +46,14 @@ public class RunApp {
 		String dateOfBecomingMember2 = myDateObj.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		
 		
-		Account liberianAccount = new Liberian(liberianPerson,"lib0231","alpha01","Jmagaret",AccountStatus.Active,"Liberian");
-		Account member_1Account = new Member(memberPerson_1,"memb123","margared21","Jora",AccountStatus.Active,dateOfBecomingMember1,1,"Member");
-		Account member_2Account = new Member(memberPerson_2,"memb124","nathan21","t_nathan",AccountStatus.Active,dateOfBecomingMember2,1,"Member");
+		Account liberianAccount = new Liberian(liberianPerson,"lib0231","alpha01","Jmagaret",AccountStatus.Active,"Liberian"); // upcasting
+		Account member_1Account = new Member(memberPerson_1,"memb123","margared21","Jora",AccountStatus.Active,dateOfBecomingMember1,1,"Member"); // upcasting
+		Account member_2Account = new Member(memberPerson_2,"memb124","nathan21","t_nathan",AccountStatus.Active,dateOfBecomingMember2,1,"Member"); // upcasting
+		
+		List<Account> allAccounts = new ArrayList<Account>();
+		allAccounts.add(liberianAccount);
+		allAccounts.add(member_1Account);
+		allAccounts.add(member_2Account);
 		
 		int choice = 0;
 		try {
@@ -71,7 +76,7 @@ public class RunApp {
 				System.out.println("you are sucessful logged in as a liberian");
 				liberianMenu.displayMenu(liberianAccount.getUsername()); // polymorphism
 				try {
-					handleUserChoice(scanner,liberianAccount,allBooks);
+					handleUserChoice(scanner,liberianAccount,allBooks,allAccounts);
 				} catch (BadInputException e) {
 					System.out.println(e.getMessage());
 				}
@@ -153,7 +158,7 @@ public class RunApp {
 	/*
 	 * Read account_credentials_db.txt file to find all the saved credentials
 	 * */
-	private static void readBookTable(List<Book> listOfbooks,Scanner scanner) throws BadInputException {
+	private static void readBookTable(List<BookItem> listOfbooks,Scanner scanner) throws BadInputException {
 		//Precondition1: a variable list which will hold all books information found in the file
 		//predondition2: a scanner object which will help to read the file
 		//Postcondition: return a list of all books found in the file
@@ -225,8 +230,11 @@ public class RunApp {
 		}
 	}
 	
-	private static void handleUserChoice(Scanner scanner , Account user,List<Book> listBooks) throws BadInputException {
+	private static void handleUserChoice(Scanner scanner , Account user, List<BookItem> listBooks, List<Account> allAccounts) throws BadInputException {
 		int choice = 0;
+		String name,id;
+		boolean hasBeenDeleted;
+		Liberian liberian = ((Liberian) user);
 		try {
 			choice = scanner.nextInt();
 		}catch (InputMismatchException e) {
@@ -243,7 +251,22 @@ public class RunApp {
 //				((Liberian) user).updateBook(listBooks, bookToUpdate)
 				break;
 			case 3:
-//				((Liberian) user).deleteBook(listBooks, bookId);
+				System.out.print("Please enter the id of the book you want to delete:");
+				try {
+					id = scanner.next();
+				}catch (InputMismatchException e) {
+					throw new BadInputException(); 
+				}
+				hasBeenDeleted= liberian.deleteBook(listBooks, id);
+				String bookinfo = "";
+				if(hasBeenDeleted) {
+				for (Book book : listBooks) {
+					if (book instanceof BookItem) {
+						bookinfo += liberian.buildStringFromBook((BookItem)book);
+					}
+				}
+				liberian.writeNewBookInfoIntoTable(bookinfo,false);
+				}
 				break;
 			case 4:
 				((Liberian) user).issueBook();
@@ -255,9 +278,44 @@ public class RunApp {
 //				((Liberian) user).createAnAccount(listOfAccounts, accountToCreate);
 				break;
 			case 7:
-//				((Liberian) user).deleteAnAccount(listOfAccounts, accountToDeleteId)
+				System.out.println("\nList available account:");
+				displayElement(allAccounts);
+				System.out.print("Please enter the id of the account you want to delete:");
+				try {
+					id = scanner.next();
+				}catch (InputMismatchException e) {
+					throw new BadInputException(); 
+				}
+				hasBeenDeleted = liberian.deleteAnAccount(allAccounts, id);
+				if(hasBeenDeleted) {
+					System.out.println("\nUpdated List accounts available:");
+					displayElement(allAccounts);
+				}
 				break;
 			case 8:
+				displayElement(allAccounts);
+				System.out.print("Please enter the member name you are looking for:");
+				try {
+					name = scanner.next();
+				}catch (InputMismatchException e) {
+					throw new BadInputException(); 
+				}
+				List<Account> foundAccount = ((Liberian) user).searchMemberByName(allAccounts, name);
+				System.out.println(" Below is the result of the search:");
+				displayElement(foundAccount);
+				break;
+			case 9:
+				System.out.print("Please enter the author name of the book you are looking for:");
+				try {
+					name = scanner.next();
+				}catch (InputMismatchException e) {
+					throw new BadInputException(); 
+				}
+				List<BookItem> foundBook = ((Liberian) user).searchBookByAuhtorName(listBooks, name);
+				System.out.println(" Below is the result of the search:");
+				displayElement(foundBook);
+				break;	
+			case 10:
 				((Liberian) user).logout();
 				System.out.println("you log out successfully");
 			default:
@@ -270,8 +328,29 @@ public class RunApp {
 		else if(user instanceof Member) {
 			
 		}
-		
+	}
+	/*Generic method which helps to displays either list of books or list of member accounts
+	 * found via the searchName method*/
+	private static <T extends Comparable<String>> void displayElement(List<T> t) {
+		int count = 1;
+		if(t.size() >=1) {
+			for (T t1 : t) {
+				System.out.println(count++ +" : "+t1);
+			}
+		}
+		else {
+			System.out.print("Nothing found");
+			System.exit(0);
+		}
+	}
+	
+	private static void listExistingAccount(List<Account> accounts) {
+		for (Account account : accounts) {
+			System.out.println("Account type: "+account.getTypeAccount()+" id: "+account.getId()+" username: "+account.getUsername()+" status: "+ account.getStatus());
+		}
 		
 	}
+	
+	
 
 }
