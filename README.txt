@@ -20,3 +20,25 @@ Assignment2:How to run the application
 	Location Book on the rack:4C1L
 	
 4. after adding open booksTable.txt file and see if the new book information have been added to the file 	
+
+Assigment3: 
+new requirements:delete a book or account, search for a book based on author name as criteria or search for a member based on the member name
+
+delete a book based on the id
+
+1. launch the app from the RunApp file since it has the main method
+
+2.log as a Liberian with the id:lib0231 and password:alpha01
+
+3.enter 3 from the main menu
+4. enter a book id for example:book5
+6.check the file booksTable.txt. there won't be a book with an id book5 
+
+search for a book
+
+1. launch the app from the RunApp file since it has the main method
+
+2.log as a Liberian with the id:lib0231 and password:alpha01
+3.enter 9 from the main menu 
+4.enter the exact name or a part of the name of book'author you are look for: enter Robert
+5- a book information will be display in the console.

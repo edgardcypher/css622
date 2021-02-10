@@ -16,6 +16,9 @@ public Address(String city, String street, String zipCode, String country, Strin
 	this.streetNumber = streetNumber;
 	this.state = state;
 }
+	public Address() {
+	// TODO Auto-generated constructor stub
+}
 	public String getCity() {
 		return city;
 	}

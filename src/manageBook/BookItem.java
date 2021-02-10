@@ -38,7 +38,7 @@ public class BookItem extends Book {
 	 * @param price
 	 * @param publicationDate
 	 */
-	public BookItem(int iSBN, String title, String author, String subject, String publisher, String language,int totalPages,
+	public BookItem(long iSBN, String title, String author, String subject, String publisher, String language,int totalPages,
 			String format, String price, LocalDateTime publicationDate,String bookId, LocalDateTime dateOfPurchase, 
 			int rackNumber, String rackLocation) {
 		super(iSBN, title, author, subject, publisher, language,totalPages,format, price, publicationDate);

@@ -154,7 +154,7 @@ public class Liberian extends Account {
 		return false;
 	}
 	/*help to check if the account which is about to be created,deleted,update exists or not */
-	private boolean isAccountExist(List<Account> listAccounts, String  accountId) {
+	public boolean isAccountExist(List<Account> listAccounts, String  accountId) {
 	//precondition:	list of existing accounts and accountid
 	//Postcondition: return true if the account already exists in the list unless it returns false
 	boolean foundAnAccount = false;

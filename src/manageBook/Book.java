@@ -27,7 +27,7 @@ public class Book implements Comparable<String> {
 	 * @param format
 	 * @param price
 	 */
-	public Book(int iSBN, String title, String author, String subject, String publisher, String language,int pageNber,
+	public Book(long iSBN, String title, String author, String subject, String publisher, String language,int pageNber,
 			String format, String price, LocalDateTime publicationDate) {
 		super();
 		ISBN = iSBN;

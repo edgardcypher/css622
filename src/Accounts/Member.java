@@ -19,10 +19,9 @@ public class Member extends Account {
 	 * @param totalBookBorrored
 	 */
 	public Member(Person person, String id, String password, String username, AccountStatus status, String dateOfBecomingMember,
-			int totalBookBorrored,String typeAccount) {
+			String typeAccount) {
 		super(person, id, password,username, status, typeAccount);
 		this.dateOfBecomingMember = dateOfBecomingMember;
-		this.totalBookBorrored = totalBookBorrored;
 	}
 
 
