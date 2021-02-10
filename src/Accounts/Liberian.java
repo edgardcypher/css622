@@ -302,14 +302,15 @@ public class Liberian extends Account {
 	
 	
 	/*help to search and return all members which have the searched name in their name */
-	public List<Account> searchMemberByName(List<Account> listAccounts, String nameMmber) {
-		Search<Account,String> searchAccounts = new Search<Account,String>();
-		return searchAccounts.searchByName(listAccounts, nameMmber);
+	public List<Account> searchMemberByName(List<Account> listAccounts, String nameMember) {
+		Search<Account,String> searchAccounts = new Search<Account,String>();// instantiate the generic class
+		return searchAccounts.searchByName(listAccounts, nameMember);
 	}
+	
 	/*help to search and return all books which have the searched name in as author name */
 	public List<BookItem> searchBookByAuhtorName(List<BookItem> listBooks, String authorName) {
-		Search<BookItem,String> searchBooks = new Search<BookItem,String>();
-		return searchBooks.searchByName(listBooks, authorName);
+		Search<BookItem,String> searchBooks = new Search<BookItem,String>(); // instantiate the Generic class
+		return searchBooks.searchByName(listBooks, authorName); // call the generic method
 	}
 	
 	public  String buildStringFromBook (BookItem book) {

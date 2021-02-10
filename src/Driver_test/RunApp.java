@@ -331,7 +331,7 @@ public class RunApp {
 	}
 	/*Generic method which helps to displays either list of books or list of member accounts
 	 * found via the searchName method*/
-	private static <T extends Comparable<String>> void displayElement(List<T> t) {
+	private static <T> void displayElement(List<T> t) {
 		int count = 1;
 		if(t.size() >=1) {
 			for (T t1 : t) {
