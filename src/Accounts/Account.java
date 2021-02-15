@@ -1,5 +1,8 @@
 package Accounts;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import Constants.AccountStatus;
@@ -10,13 +13,18 @@ import Constants.AccountStatus;
  * Member and Liberian
  * */
 
-public abstract class Account implements Comparable<String> {
-  private Person person;
+public abstract class Account implements Comparable<String>, Serializable {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private Person person;
   private String id;
   private String username;
   private String password;
   private AccountStatus status;
   private String typeAccount;
+  private String dateOfAccountCreation;
   
   
 	public Account(Person person, String id, String password, String username, AccountStatus status, String typeAcc) {
@@ -25,12 +33,20 @@ public abstract class Account implements Comparable<String> {
 		this.person = person;
 		this.id = id;
 		this.password = password;
-		this.status = status;
+		this.setStatus(AccountStatus.Active);
 		this.typeAccount = typeAcc;
 		this.username = username;
+		this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+		
 	}
 		
-	  public boolean resetPassword() {
+	  public Account() {
+		  this.setStatus(AccountStatus.Active);
+		  this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+		// TODO Auto-generated constructor stub
+	}
+
+	public boolean resetPassword() {
 		  System.out.println("password reset successfully");
 		  return true;
 	   }
@@ -87,8 +103,14 @@ public abstract class Account implements Comparable<String> {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	
+
+	public String getDateOfAccountCreation() {
+		return dateOfAccountCreation;
+	}
+
+	public void setDateOfAccountCreation(String dateOfAccountCreation) {
+		this.dateOfAccountCreation = dateOfAccountCreation;
+	}
 
 	protected boolean isUsernameExist(List<Account> listAccounts, String  username) {
 		//Postcondition: return true if the account username already exists in the list unless it returns false
@@ -119,7 +141,7 @@ public abstract class Account implements Comparable<String> {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return "Account type: "+this.getTypeAccount()+" id: "+this.getId()+" Username: "+this.getUsername()+
-				" Name: "+this.getPerson().getName()+" Phone Number: "+this.getPerson().getPhoneNumber()+" Email: "+this.getPerson().getEmail()+" status: "+ this.getStatus();
+				" "+this.getPerson()+" status: "+ this.getStatus();
 	}
 
 	

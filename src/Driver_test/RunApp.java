@@ -47,8 +47,10 @@ public class RunApp {
 		
 		
 		Account liberianAccount = new Liberian(liberianPerson,"lib0231","alpha01","Jmagaret",AccountStatus.Active,"Liberian"); // upcasting
-		Account member_1Account = new Member(memberPerson_1,"memb123","margared21","Jora",AccountStatus.Active,dateOfBecomingMember1,"Member"); // upcasting
-		Account member_2Account = new Member(memberPerson_2,"memb124","nathan21","t_nathan",AccountStatus.Active,dateOfBecomingMember2,"Member"); // upcasting
+		Account member_1Account = new Member(memberPerson_1,"memb123","margared21","Jora",AccountStatus.Active,"Member"); // upcasting
+		member_1Account.setDateOfAccountCreation(dateOfBecomingMember1);
+		Account member_2Account = new Member(memberPerson_2,"memb124","nathan21","t_nathan",AccountStatus.Active,"Member"); // upcasting
+		member_2Account.setDateOfAccountCreation(dateOfBecomingMember2);
 		
 		List<Account> allAccounts = new ArrayList<Account>();
 		allAccounts.add(liberianAccount);
@@ -275,7 +277,7 @@ public class RunApp {
 				((Liberian) user).checkOverDueBook();
 				break;
 			case 6:
-//				((Liberian) user).createAnAccount(listOfAccounts, accountToCreate);
+				((Liberian) user).createAnAccount(allAccounts);
 				break;
 			case 7:
 				System.out.println("\nList available account:");
@@ -344,12 +346,12 @@ public class RunApp {
 		}
 	}
 	
-	private static void listExistingAccount(List<Account> accounts) {
-		for (Account account : accounts) {
-			System.out.println("Account type: "+account.getTypeAccount()+" id: "+account.getId()+" username: "+account.getUsername()+" status: "+ account.getStatus());
-		}
-		
-	}
+//	private static void listExistingAccount(List<Account> accounts) {
+//		for (Account account : accounts) {
+//			System.out.println("Account type: "+account.getTypeAccount()+" id: "+account.getId()+" username: "+account.getUsername()+" status: "+ account.getStatus());
+//		}
+//		
+//	}
 	
 	
 

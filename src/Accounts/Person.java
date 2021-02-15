@@ -1,6 +1,12 @@
 package Accounts;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private Address address;
 	private String email;
@@ -38,5 +44,11 @@ public class Person {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "Name: "+this.getName()+" Email: "+this.getEmail()+
+				" Phone Number: "+this.getPhoneNumber()+" Adress: "+this.getAddress();
+	}
 	
 }

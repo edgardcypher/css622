@@ -1,7 +1,13 @@
 package Accounts;
 
-public class Address {
- private String city;
+import java.io.Serializable;
+
+public class Address implements Serializable {
+ /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private String city;
  private String street;
  private String state;
  private String zipCode;
@@ -56,6 +62,11 @@ public Address(String city, String street, String zipCode, String country, Strin
 		this.state = state;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return this.getStreetNumber()+" "+this.getStreet()+" "+this.getCity()+" "+this.getState() +" "+this.getZipCode()+" "+this.getCountry();
+	}
  
  
 }

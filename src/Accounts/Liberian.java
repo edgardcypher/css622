@@ -1,9 +1,16 @@
 package Accounts;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -11,6 +18,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import Constants.AccountStatus;
 import Driver_test.BadDateFormatException;
@@ -109,26 +117,15 @@ public class Liberian extends Account {
 	}
    /*help to add a new account to the list if the account does not exist yets
     * */
-	public boolean createAnAccount(List<Account> listOfAccounts, Account accountToCreate) {
+	public void createAnAccount(List<Account> listOfAccounts) {
 		//Precondition: the new account should not exist
 		// Postcondition: add a new account to a list of accounts
-			if(accountToCreate instanceof Member) {
-				if(!isAccountExist(listOfAccounts,accountToCreate.getId()) 
-						&& isUsernameExist(listOfAccounts, accountToCreate.getUsername())) {// check if account already exist
-					listOfAccounts.add(accountToCreate);
-					System.out.println("membership account has been created successfully");
-					return true;
-				}
-			} else if (accountToCreate instanceof Liberian) {
-				if(!isAccountExist(listOfAccounts,accountToCreate.getId())) {//check if account already exist
-					listOfAccounts.add(accountToCreate);
-					System.out.println("liberian account has been created successfully");
-					return true;
-				}
+		try {
+			captureAccoutInformation();
+		} catch (BadInputException e) {
+			System.out.println("you entered a wrong format value");
 		}
-		return false;
 	}
-	
 	
 	/*helps to go through the list of accounts and found the one to delete
 	 * */
@@ -153,6 +150,7 @@ public class Liberian extends Account {
 		System.out.println("there is not account with that id");
 		return false;
 	}
+	
 	/*help to check if the account which is about to be created,deleted,update exists or not */
 	public boolean isAccountExist(List<Account> listAccounts, String  accountId) {
 	//precondition:	list of existing accounts and accountid
@@ -297,6 +295,151 @@ public class Liberian extends Account {
 		       System.out.println("Error in closing the BufferedWriter"+ex);
 		    }
 		}
+		
+	}
+	
+	private void captureAccoutInformation() throws BadInputException {
+		
+		Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+		Person person = new Person();
+		System.out.print("\n Enter the personal information of the account you want to open:\n");
+		System.out.print("Fullname:");
+		String fullname = scanner.next();
+		person.setName(fullname);
+		
+		System.out.print("Email:");
+		String email = scanner.next();
+		person.setEmail(email);
+		
+		System.out.print("Phone number:");
+		String phoneNumber = scanner.next();
+		person.setPhoneNumber(phoneNumber);
+		
+		System.out.print("\n Now enter the address information of the account holder you want to open:\n");
+		
+		Address address = new Address();
+		
+		System.out.print("Street number:");
+		int streetNumber = scanner.nextInt();
+		address.setStreetNumber(streetNumber);
+		
+		System.out.print("Street Name:");
+		String streetName = scanner.next();
+		address.setStreet(streetName);
+		
+		System.out.print("City Name:");
+		String city = scanner.next();
+		address.setCity(city);
+		
+		System.out.print("State Name:");
+		String state = scanner.next();
+		address.setState(state);
+		
+		System.out.print("Country Name:");
+		String country = scanner.next();
+		address.setCountry(country);
+		
+		System.out.print("Zip code:");
+		String zipCode = scanner.next();
+		address.setZipCode(zipCode);
+		
+		person.setAddress(address);
+		
+		System.out.print("\n Now enter the account information of the member you want to open:\n");
+		
+		Account account = new Member();
+		account.setPerson(person);
+		
+		System.out.print("Username:");
+		String username = scanner.next();
+		account.setUsername(username);
+		
+		System.out.print("account Id:");
+		String accountId = scanner.next();
+		account.setId(accountId);
+		
+		System.out.print("account password:");
+		String password = scanner.next();
+		account.setPassword(password);
+		account.setTypeAccount("Member");
+		List<Account>  accounts = readAllAccount();
+		if(!isAccountExist(accounts, account.getId())) {
+			accounts.add(account);
+			writeAccountDataInBinFile(accounts);
+		}else {
+			System.out.println("Sorry the accountid already exist;");
+		}
+    
+		scanner.close();
+		
+				
+	}
+	
+	private List<Account> findMemberFromSpecificCity(List<Account> accounts, String city) {
+		
+		List<Account> memberLivingInThisCity = accounts
+				  .stream()
+				  .filter(c -> c.getPerson().getAddress().getCity().equals(city))
+				  .collect(Collectors.toList());
+		return memberLivingInThisCity;
+	}
+	
+	private void writeAccountDataInBinFile(List<Account> accounts) {
+		try {
+			
+			try (ObjectOutputStream outfile = new ObjectOutputStream(new FileOutputStream("accounts.dat"));){
+				for (Account account : accounts) {
+					outfile.writeObject(account);
+				}
+				outfile.flush();
+			}
+			
+		}
+		catch (FileNotFoundException ex)
+	     {
+	         System.out.println("FileNotFoundException"); 
+	         ex.printStackTrace();   
+	     }
+
+	     catch (IOException ex)
+	     {
+	         System.out.println("IOException");
+	         ex.printStackTrace();    
+	     }
+	}
+	
+	private List<Account>  readAllAccount() {
+		//Postcondition: read each object from the file and add it to the list allAccounts which will be returned
+
+		List<Account> allAccounts = new ArrayList<Account>();
+		try {
+			
+			FileInputStream br = new FileInputStream("accounts.dat");
+				if(br.read() != -1) {
+					ObjectInputStream infile = new ObjectInputStream(new FileInputStream("accounts.dat"));
+					while (true)
+					{
+						try {
+							Account retrievedAccount = (Account)(infile.readObject());
+							System.out.printf("retrieved this account: %s%n", retrievedAccount);
+							allAccounts.add(retrievedAccount);
+						} catch (EOFException ex) {
+							infile.close();
+							System.out.println("EOF reached in account.dat");
+							break;
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+					} 
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException"); 
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Error during the reading of data");
+			e.printStackTrace();
+		}
+		return allAccounts;
 		
 	}
 	

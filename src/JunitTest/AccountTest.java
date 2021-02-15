@@ -46,12 +46,14 @@ public class AccountTest {
 		Person person1 = new Person("Joe Doe", new Address(), "joe@hotmail.com", "201-304-203");
 		LocalDateTime myDate = LocalDateTime.of(2019, 10, 5, 11, 10);
 		String dateOfBecomingMember1 = myDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-		Account member1 = new Member(person1, "memb1", "beta1", "Jdoe", AccountStatus.Active, dateOfBecomingMember1,"Member");
+		Account member1 = new Member(person1, "memb1", "beta1", "Jdoe", AccountStatus.Active,"Member");
+		member1.setDateOfAccountCreation(dateOfBecomingMember1);
 		
 		Person person2 = new Person("Joe Smith", new Address(), "joe@hotmail.com", "201-207-203");
 		LocalDateTime date = LocalDateTime.of(2018, 11, 5, 11, 10);
 		String dateOfBecomingMember2 = date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-		Account member2 = new Member(person2, "memb2", "beta2", "Jsmith", AccountStatus.Active, dateOfBecomingMember2,"Member");
+		Account member2 = new Member(person2, "memb2", "beta2", "Jsmith", AccountStatus.Active,"Member");
+		member2.setDateOfAccountCreation(dateOfBecomingMember2);
 		
 		List<Account> allAccounts = new ArrayList<>();
 		allAccounts.add(liberian);

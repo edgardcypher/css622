@@ -1,12 +1,16 @@
 package Accounts;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 import Constants.AccountStatus;
 
 public class Member extends Account {
-	private String dateOfBecomingMember;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int totalBookBorrored;
 	
 	
@@ -18,10 +22,15 @@ public class Member extends Account {
 	 * @param dateOfBecomingMember
 	 * @param totalBookBorrored
 	 */
-	public Member(Person person, String id, String password, String username, AccountStatus status, String dateOfBecomingMember,
-			String typeAccount) {
+	public Member(Person person, String id, String password, String username, AccountStatus status, String typeAccount) {
 		super(person, id, password,username, status, typeAccount);
-		this.dateOfBecomingMember = dateOfBecomingMember;
+		this.setTotalBookBorrored(0);
+	}
+
+
+	public Member() {
+		super();
+		this.setTotalBookBorrored(0);
 	}
 
 
@@ -29,17 +38,6 @@ public class Member extends Account {
 		System.out.println("membership account create successfully");
 		return true;
 	}
-
-
-	public String getDateOfBecomingMember() {
-		return dateOfBecomingMember;
-	}
-
-
-	public void setDateOfBecomingMember(String dateOfBecomingMember) {
-		this.dateOfBecomingMember = dateOfBecomingMember;
-	}
-
 
 	public int getTotalBookBorrored() {
 		return totalBookBorrored;
@@ -53,5 +51,13 @@ public class Member extends Account {
 	public void borrowBook() {
 		System.out.println("I am borrowing a book from Library");
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "Account type: "+this.getTypeAccount()+" id: "+this.getId()+" Username: "+this.getUsername()+" status: "+ this.getStatus()
+		+" "+this.getPerson()+" total borrowed books "+this.getTotalBookBorrored() ;
+	}
+	
 
 }
