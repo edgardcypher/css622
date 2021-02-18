@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import Constants.AccountStatus;
@@ -117,7 +118,7 @@ public class Liberian extends Account {
 	}
    /*help to add a new account to the list if the account does not exist yets
     * */
-	public void createAnAccount(List<Account> listOfAccounts) {
+	public void createAnAccount() {
 		//Precondition: the new account should not exist
 		// Postcondition: add a new account to a list of accounts
 		try {
@@ -130,24 +131,16 @@ public class Liberian extends Account {
 	/*helps to go through the list of accounts and found the one to delete
 	 * */
 	public boolean deleteAnAccount(List<Account> listOfAccounts, String accountToDeleteId) {
-		//Precondition: the account should exist in the list of account
 		// Postcondition: a new updated list of accounts without the deleted one
-		for (Account thisMember : listOfAccounts) {
-			if(thisMember instanceof Member) {
-				if(thisMember.getId().equals(accountToDeleteId)) {
-					listOfAccounts.remove(thisMember);
-					System.out.println("membership account with id: "+accountToDeleteId+" has been deleted successfully");
-					return true;
-				}
-			}else if (thisMember instanceof Liberian) {
-				if(thisMember.getId().equals(accountToDeleteId)) {
-					listOfAccounts.remove(thisMember);
-					System.out.println("Liberian account has been deleted successfully");
-					return true;
-				}
-			}
+		List<Account> newUpdatedAccount = listOfAccounts.stream()
+				.filter(account -> !account.getId().toLowerCase().equals(accountToDeleteId.toLowerCase()))
+				.collect(Collectors.toList());
+		if(newUpdatedAccount.size() != listOfAccounts.size() ) {
+			System.out.println("membership account with id: "+accountToDeleteId+" has been deleted successfully");
+			writeAccountDataInBinFile(newUpdatedAccount);// update the binary file with the new list of accounts
+			return true;
 		}
-		System.out.println("there is not account with that id");
+		System.out.println("membership account with id: "+accountToDeleteId+" was not found");
 		return false;
 	}
 	
@@ -297,7 +290,7 @@ public class Liberian extends Account {
 		}
 		
 	}
-	
+	/*Collect all the information for the new account and save them in the binary file if the accountid does not exist*/
 	private void captureAccoutInformation() throws BadInputException {
 		
 		Scanner scanner = new Scanner(System.in).useDelimiter("\n");
@@ -362,29 +355,24 @@ public class Liberian extends Account {
 		String password = scanner.next();
 		account.setPassword(password);
 		account.setTypeAccount("Member");
+		
 		List<Account>  accounts = readAllAccount();
+		
 		if(!isAccountExist(accounts, account.getId())) {
 			accounts.add(account);
 			writeAccountDataInBinFile(accounts);
+			System.out.println("Great! The account was succesfully created");
 		}else {
 			System.out.println("Sorry the accountid already exist;");
 		}
     
 		scanner.close();
-		
-				
 	}
 	
-	private List<Account> findMemberFromSpecificCity(List<Account> accounts, String city) {
-		
-		List<Account> memberLivingInThisCity = accounts
-				  .stream()
-				  .filter(c -> c.getPerson().getAddress().getCity().equals(city))
-				  .collect(Collectors.toList());
-		return memberLivingInThisCity;
-	}
-	
+	//Write in the binary file all accounts contain in the list
 	private void writeAccountDataInBinFile(List<Account> accounts) {
+		// Precondition: a list of accounts
+		// poscondition: a binary file with data of newly created account
 		try {
 			
 			try (ObjectOutputStream outfile = new ObjectOutputStream(new FileOutputStream("accounts.dat"));){
@@ -393,7 +381,6 @@ public class Liberian extends Account {
 				}
 				outfile.flush();
 			}
-			
 		}
 		catch (FileNotFoundException ex)
 	     {
@@ -408,24 +395,23 @@ public class Liberian extends Account {
 	     }
 	}
 	
-	private List<Account>  readAllAccount() {
+	/*Go through the binary file and read all available account information file*/
+	public List<Account>  readAllAccount() {
 		//Postcondition: read each object from the file and add it to the list allAccounts which will be returned
 
 		List<Account> allAccounts = new ArrayList<Account>();
 		try {
 			
 			FileInputStream br = new FileInputStream("accounts.dat");
-				if(br.read() != -1) {
+				if(br.read() != -1) {// make sure the binary file is not empty
 					ObjectInputStream infile = new ObjectInputStream(new FileInputStream("accounts.dat"));
 					while (true)
 					{
 						try {
-							Account retrievedAccount = (Account)(infile.readObject());
-							System.out.printf("retrieved this account: %s%n", retrievedAccount);
-							allAccounts.add(retrievedAccount);
+							Account retrievedAccount = (Account)(infile.readObject());// read the account object
+							allAccounts.add(retrievedAccount);// add the account object to the list
 						} catch (EOFException ex) {
 							infile.close();
-							System.out.println("EOF reached in account.dat");
 							break;
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
@@ -440,7 +426,18 @@ public class Liberian extends Account {
 			e.printStackTrace();
 		}
 		return allAccounts;
+	}
+	
+	//use a lamda function and stream to find a specific account
+	public List<Account> findMemberFromSpecificCity(List<Account> accounts, String city) {
+		//PostCondition: list of account holder which live in the specified city
 		
+		Predicate<Account> filterForCity = c -> c.getPerson().getAddress().getCity().toLowerCase().equals(city.toLowerCase());
+		List<Account> memberLivingInThisCity = accounts
+				  .stream()
+				  .filter(filterForCity)
+				  .collect(Collectors.toList());
+		return memberLivingInThisCity;
 	}
 	
 	
@@ -448,6 +445,19 @@ public class Liberian extends Account {
 	public List<Account> searchMemberByName(List<Account> listAccounts, String nameMember) {
 		Search<Account,String> searchAccounts = new Search<Account,String>();// instantiate the generic class
 		return searchAccounts.searchByName(listAccounts, nameMember);
+	}
+	
+	/*help to search and return all members which have the searched username */
+	public List<Account> searchMemberByUsername(List<Account> listAccounts, String username) {
+		//Precondition: a list of accounts and the username to look for
+		// poscondition: a new list of accounts which contains accounts with matching username
+		Predicate<Account> filterForMatchingUsername = c -> c.getUsername().toLowerCase().equals(username.toLowerCase()) 
+				|| c.getUsername().toLowerCase().matches(".*"+username.toLowerCase()+".*");
+		List<Account> memberWithThatUsername = listAccounts
+				  .stream()
+				  .filter(filterForMatchingUsername)
+				  .collect(Collectors.toList());
+		return memberWithThatUsername;
 	}
 	
 	/*help to search and return all books which have the searched name in as author name */

@@ -237,6 +237,7 @@ public class RunApp {
 		String name,id;
 		boolean hasBeenDeleted;
 		Liberian liberian = ((Liberian) user);
+		List<Account> accounts = liberian.readAllAccount();
 		try {
 			choice = scanner.nextInt();
 		}catch (InputMismatchException e) {
@@ -277,36 +278,58 @@ public class RunApp {
 				((Liberian) user).checkOverDueBook();
 				break;
 			case 6:
-				((Liberian) user).createAnAccount(allAccounts);
+				((Liberian) user).createAnAccount();
 				break;
 			case 7:
 				System.out.println("\nList available account:");
-				displayElement(allAccounts);
+				
+				displayElement(accounts);
+//				}
+				break;
+			case 8:
+				System.out.println("\nList available account:");
+				displayElement(accounts);
 				System.out.print("Please enter the id of the account you want to delete:");
 				try {
 					id = scanner.next();
 				}catch (InputMismatchException e) {
 					throw new BadInputException(); 
 				}
-				hasBeenDeleted = liberian.deleteAnAccount(allAccounts, id);
+				hasBeenDeleted = liberian.deleteAnAccount(accounts, id);
 				if(hasBeenDeleted) {
 					System.out.println("\nUpdated List accounts available:");
-					displayElement(allAccounts);
+					accounts = liberian.readAllAccount();
+					displayElement(accounts);
 				}
-				break;
-			case 8:
-				displayElement(allAccounts);
-				System.out.print("Please enter the member name you are looking for:");
-				try {
-					name = scanner.next();
-				}catch (InputMismatchException e) {
-					throw new BadInputException(); 
-				}
-				List<Account> foundAccount = ((Liberian) user).searchMemberByName(allAccounts, name);
-				System.out.println(" Below is the result of the search:");
-				displayElement(foundAccount);
 				break;
 			case 9:
+//				displayElement(accounts);
+				List<Account> foundAccount = null;
+				System.out.print("Do you want to search by: \n1-name \n2-username");
+				System.out.print("\nyour choice:");
+				choice = scanner.nextInt();
+				if(choice == 1) {
+					System.out.print("Please enter the member name you are looking for:");
+					try {
+						name = scanner.next();
+					}catch (InputMismatchException e) {
+						throw new BadInputException(); 
+					}
+				    foundAccount = ((Liberian) user).searchMemberByName(accounts, name);
+					System.out.println(" Below is the result of the search:");
+				}else if(choice == 2) {
+					System.out.print("Please enter the member username you are looking for:");
+					try {
+						name = scanner.next();
+					}catch (InputMismatchException e) {
+						throw new BadInputException(); 
+					}
+				    foundAccount = ((Liberian) user).searchMemberByUsername(accounts, name);
+					System.out.println(" Below is the result of the search:");
+				}
+				displayElement(foundAccount);
+				break;
+			case 10:
 				System.out.print("Please enter the author name of the book you are looking for:");
 				try {
 					name = scanner.next();
@@ -317,9 +340,10 @@ public class RunApp {
 				System.out.println(" Below is the result of the search:");
 				displayElement(foundBook);
 				break;	
-			case 10:
+			case 11:
 				((Liberian) user).logout();
 				System.out.println("you log out successfully");
+				break;
 			default:
 				System.out.println("you entered a wrong choice. the program will stop.Thank you");
 				System.exit(0);

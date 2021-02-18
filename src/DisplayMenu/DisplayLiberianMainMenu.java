@@ -12,10 +12,11 @@ public class DisplayLiberianMainMenu extends Menu {
 		System.out.println("4- Issue a book");
 		System.out.println("5- Check overdue issue book");
 		System.out.println("6- add an account");
-		System.out.println("7- delete an account");
-		System.out.println("8- search an account by name");
-		System.out.println("9- search a book by author name");
-		System.out.println("10- Logout");
+		System.out.println("7- List all accounts");
+		System.out.println("8- delete an account");
+		System.out.println("9- search an account by name or username");
+		System.out.println("10- search a book by author name");
+		System.out.println("11- Logout");
 		System.out.print("\nYour choice:");
 	}
 }

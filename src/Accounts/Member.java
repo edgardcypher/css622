@@ -56,7 +56,7 @@ public class Member extends Account {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return "Account type: "+this.getTypeAccount()+" id: "+this.getId()+" Username: "+this.getUsername()+" status: "+ this.getStatus()
-		+" "+this.getPerson()+" total borrowed books "+this.getTotalBookBorrored() ;
+		+" "+this.getPerson()+" total borrowed books: "+this.getTotalBookBorrored() ;
 	}
 	
 
