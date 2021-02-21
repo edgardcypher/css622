@@ -26,6 +26,12 @@ public class Member extends Account {
 		super(person, id, password,username, status, typeAccount);
 		this.setTotalBookBorrored(0);
 	}
+	
+	public Member(String id, String password, String username, AccountStatus status) {
+		super(id, password,username, status);
+		this.setTotalBookBorrored(0);
+		this.setTypeAccount("Member");
+	}
 
 
 	public Member() {

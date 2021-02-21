@@ -39,6 +39,17 @@ private Person person;
 		this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
 		
 	}
+	
+	public Account(String id, String password, String username, AccountStatus status) {
+		/*this constructor will help to instantiate child classes*/
+		super();
+		this.id = id;
+		this.password = password;
+		this.setStatus(AccountStatus.Active);
+		this.username = username;
+		this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+		
+	}
 		
 	  public Account() {
 		  this.setStatus(AccountStatus.Active);

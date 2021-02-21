@@ -1,6 +1,5 @@
 package Accounts;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.EOFException;
 import java.io.File;
@@ -26,12 +25,68 @@ import Driver_test.BadDateFormatException;
 import Driver_test.BadInputException;
 import manageBook.Book;
 import manageBook.BookItem;
+import manageBook.BookItem.BookStatus;
 
-public class Liberian extends Account {
+public class Liberian extends Account implements  Runnable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private BookItem bookToIssue;
+	private Member memberWhoBorrow;
+	
+
+	public void run() {
+		this.issueBook(this.getBookToIssue(), this.getMemberWhoBorrow());
+	}
+	
+	public void issueBook(BookItem bookToIssue, Member memberWhoBorrow) {
+		if(this.getStatus().equals(AccountStatus.Active) || memberWhoBorrow.getStatus().equals(AccountStatus.Active) ) {
+			if(bookToIssue.getStatus().equals(BookStatus.available.toString())) {
+				bookToIssue.setStatus(BookStatus.borrowed.toString());
+				int borrowedBook = memberWhoBorrow.getTotalBookBorrored();
+				memberWhoBorrow.setTotalBookBorrored(borrowedBook++);
+				System.out.println("Bookid "+bookToIssue.getBookId()+ " issued to "+memberWhoBorrow.getId());
+			}
+			else {
+				System.out.println("Sorry that book is not avalaible now");
+			}
+		}
+		else {
+			System.out.println("Sorry you cannot perform this operation because your account or member account is not active");
+		}
+	}
+
 	
 	
 	public Liberian(Person person, String id, String password,String username, AccountStatus status, String accountType) {
 		super(person, id, password,username, status, accountType);
+	}
+	public Liberian(String id, String password,String username, AccountStatus status) {
+		super(id, password,username, status);
+		this.setTypeAccount("Liberian");
+	}
+	
+	public Member getMemberWhoBorrow() {
+		return memberWhoBorrow;
+	}
+
+
+
+	public void setMemberWhoBorrow(Member memberWhoBorrow) {
+		this.memberWhoBorrow = memberWhoBorrow;
+	}
+
+
+
+	public BookItem getBookToIssue() {
+		return bookToIssue;
+	}
+
+
+
+	public void setBookToIssue(BookItem bookToIssue) {
+		this.bookToIssue = bookToIssue;
 	}
 
 	public boolean addBook(List<BookItem> listBooks, Scanner scanner ) {
@@ -106,9 +161,7 @@ public class Liberian extends Account {
 		}
 		return true;
 	}
-	public void issueBook() {
-		System.out.println("issuing a book");
-	}
+
 	public void checkOverDueBook() {
 		System.out.println("checking overdue book");
 		

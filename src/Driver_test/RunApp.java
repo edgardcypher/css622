@@ -272,7 +272,7 @@ public class RunApp {
 				}
 				break;
 			case 4:
-				((Liberian) user).issueBook();
+//				((Liberian) user).issueBook();
 				break;
 			case 5:
 				((Liberian) user).checkOverDueBook();

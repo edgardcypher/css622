@@ -81,12 +81,24 @@ public class BookItem extends Book {
 	public void setRackLocation(String rackLocation) {
 		this.rackLocation = rackLocation;
 	}
-
-	public String getStatus() {
+	
+	/* this method is used to get the status of a book
+	 * so it can be called by multiple threads which run concurrently to read
+	 * the value of local variable status. We synchronize the method to make the threads
+	 * running concurrently safe. so each thread can read the right value of status
+	 * */
+	
+	synchronized public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	/* this method is used to set the status of a book
+	 * so it can be called by multiple threads which run concurrently to read
+	 * the value of local variable status. We synchronize the method to make the threads
+	 * running concurrently safe. so each thread can set the right value of status
+	 * */
+	
+	synchronized public void setStatus(String status) {
 		this.status = status;
 	}
 	
