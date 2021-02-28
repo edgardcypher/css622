@@ -41,19 +41,19 @@ public class Liberian extends Account implements  Runnable {
 	}
 	
 	public void issueBook(BookItem bookToIssue, Member memberWhoBorrow) {
-		if(this.getStatus().equals(AccountStatus.Active) || memberWhoBorrow.getStatus().equals(AccountStatus.Active) ) {
+		if(memberWhoBorrow.getStatus().equals(AccountStatus.Active) ) {
 			if(bookToIssue.getStatus().equals(BookStatus.available.toString())) {
 				bookToIssue.setStatus(BookStatus.borrowed.toString());
 				int borrowedBook = memberWhoBorrow.getTotalBookBorrored();
 				memberWhoBorrow.setTotalBookBorrored(borrowedBook++);
-				System.out.println("Bookid "+bookToIssue.getBookId()+ " issued to "+memberWhoBorrow.getId());
+				System.out.println("the book with Bookid "+bookToIssue.getBookId()+ " has been issued to member with memberid: "+memberWhoBorrow.getId());
 			}
 			else {
 				System.out.println("Sorry that book is not avalaible now");
 			}
 		}
 		else {
-			System.out.println("Sorry you cannot perform this operation because your account or member account is not active");
+			System.out.println("Sorry you the account member is not active");
 		}
 	}
 

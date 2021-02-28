@@ -88,7 +88,7 @@ public class BookItem extends Book {
 	 * running concurrently safe. so each thread can read the right value of status
 	 * */
 	
-	synchronized public String getStatus() {
+	 public synchronized String getStatus() {
 		return status;
 	}
 
@@ -98,7 +98,7 @@ public class BookItem extends Book {
 	 * running concurrently safe. so each thread can set the right value of status
 	 * */
 	
-	synchronized public void setStatus(String status) {
+	 public synchronized void setStatus(String status) {
 		this.status = status;
 	}
 	
