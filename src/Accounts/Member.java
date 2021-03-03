@@ -23,7 +23,7 @@ public class Member extends Account {
 	 * @param totalBookBorrored
 	 */
 	public Member(Person person, String id, String password, String username, AccountStatus status, String typeAccount) {
-		super(person, id, password,username, status, typeAccount);
+		super(person, id, password,username, status.toString(), typeAccount);
 		this.setTotalBookBorrored(0);
 	}
 	

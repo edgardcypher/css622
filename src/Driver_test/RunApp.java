@@ -2,6 +2,10 @@ package Driver_test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,12 +26,39 @@ import Constants.AccountStatus;
 import DisplayMenu.DisplayLiberianMainMenu;
 import DisplayMenu.DisplayMemberMainMenu;
 import DisplayMenu.Menu;
+import dbOperations.CRUDAccount;
+import dbOperations.CRUDBooks;
 import manageBook.Book;
 import manageBook.BookItem;
 
 public class RunApp {
+	
+	/*help to connect with THELIBERIAN database*/
+	static Connection connectCreateTable() {
+		Connection con = null;
+		try {
+			String url = "jdbc:sqlite:THELIBERIANDB.db"; // String url to etablish the db connection
+			con = DriverManager.getConnection(url);
+			System.out.println("Connection to SQLite has been established and it is opened");
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return con;
+	}
 
 	public static void main(String[] args) {
+		Connection con =  connectCreateTable();
+		
+		CRUDAccount crudAccount = new CRUDAccount(con);
+		crudAccount.createPersonAddressTable();
+		crudAccount.createPersonTable();
+		crudAccount.createAccountTable();
+		
+		CRUDBooks crudBook = new CRUDBooks(con);
+		crudBook.createBookTable();
+		crudBook.createTrackIssuedBookTable();
+		
 		List<BookItem> allBooks = new ArrayList<>();// will hold information about each book
 		// create a list of credential	
 		LinkedList<Credential> credentialList = new LinkedList<>();//create an empty list of credential
@@ -78,7 +109,7 @@ public class RunApp {
 				System.out.println("you are sucessful logged in as a liberian");
 				liberianMenu.displayMenu(liberianAccount.getUsername()); // polymorphism
 				try {
-					handleUserChoice(scanner,liberianAccount,allBooks,allAccounts);
+					handleUserChoice(scanner,liberianAccount,allBooks,allAccounts,crudAccount,crudBook);
 				} catch (BadInputException e) {
 					System.out.println(e.getMessage());
 				}
@@ -106,7 +137,14 @@ public class RunApp {
 		}
 		
 		scanner.close();
-
+		try {
+			if(con != null) {
+				con.close();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static int theLogger(Scanner scanner) throws BadInputException {
@@ -166,7 +204,7 @@ public class RunApp {
 		//Postcondition: return a list of all books found in the file
 		
 		try {
-			File file = new File("booksTable.txt");// create a file object with the pathfilename 
+			File file = new File("booksFile.txt");// create a file object with the pathfilename 
 			scanner = new Scanner(file);// read the file
 			scanner.useDelimiter(",");
 
@@ -232,7 +270,7 @@ public class RunApp {
 		}
 	}
 	
-	private static void handleUserChoice(Scanner scanner , Account user, List<BookItem> listBooks, List<Account> allAccounts) throws BadInputException {
+	private static void handleUserChoice(Scanner scanner , Account user, List<BookItem> listBooks, List<Account> allAccounts,CRUDAccount crudAccount,CRUDBooks crudBook) throws BadInputException {
 		int choice = 0;
 		String name,id;
 		boolean hasBeenDeleted;
@@ -248,12 +286,21 @@ public class RunApp {
 		if(user instanceof Liberian) {
 			switch (choice) {
 			case 1:
-				((Liberian) user).addBook(listBooks, scanner);
+				BookItem newBook = ((Liberian) user).addBook(listBooks, scanner);
+				crudBook.insertBookDataIntoTable(newBook);
 				break;
 			case 2:
-//				((Liberian) user).updateBook(listBooks, bookToUpdate)
+				List<BookItem> listBooksFromDB = new ArrayList<BookItem>();
+				crudBook.listBooks(listBooksFromDB);
+				System.out.println("\nList books from file\n");
+				displayElement(listBooks);
+				System.out.println("\nList books from Book Table\n");
+				displayElement(listBooksFromDB);
+				crudBook.findInformationMemberWhoBorrowed("memb2");
+				crudBook.nbreBookWithPagesGreaterOrEqualThan100();
 				break;
 			case 3:
+				crudBook.listBooks(listBooks);
 				System.out.print("Please enter the id of the book you want to delete:");
 				try {
 					id = scanner.next();
@@ -268,25 +315,25 @@ public class RunApp {
 						bookinfo += liberian.buildStringFromBook((BookItem)book);
 					}
 				}
-				liberian.writeNewBookInfoIntoTable(bookinfo,false);
+				liberian.writeNewBookInfoIntoFile(bookinfo,false);
 				}
 				break;
 			case 4:
 //				((Liberian) user).issueBook();
 				break;
 			case 5:
-				((Liberian) user).checkOverDueBook();
+				Account newAccount = ((Liberian) user).createAnAccount();
+				crudAccount.insertAddressPersonAccountRow(newAccount);
 				break;
 			case 6:
-				((Liberian) user).createAnAccount();
+				List<Account> accountsFromDB = new ArrayList<Account>();
+				System.out.println("\nList available account from binary file:");
+				displayElement(accounts);
+				System.out.println("\nList available account from Account table");
+				crudAccount.listAllAccount(accountsFromDB);
+				displayElement(accountsFromDB);
 				break;
 			case 7:
-				System.out.println("\nList available account:");
-				
-				displayElement(accounts);
-//				}
-				break;
-			case 8:
 				System.out.println("\nList available account:");
 				displayElement(accounts);
 				System.out.print("Please enter the id of the account you want to delete:");
@@ -302,8 +349,7 @@ public class RunApp {
 					displayElement(accounts);
 				}
 				break;
-			case 9:
-//				displayElement(accounts);
+			case 8:
 				List<Account> foundAccount = null;
 				System.out.print("Do you want to search by: \n1-name \n2-username");
 				System.out.print("\nyour choice:");
@@ -329,7 +375,7 @@ public class RunApp {
 				}
 				displayElement(foundAccount);
 				break;
-			case 10:
+			case 9:
 				System.out.print("Please enter the author name of the book you are looking for:");
 				try {
 					name = scanner.next();
@@ -340,7 +386,7 @@ public class RunApp {
 				System.out.println(" Below is the result of the search:");
 				displayElement(foundBook);
 				break;	
-			case 11:
+			case 10:
 				((Liberian) user).logout();
 				System.out.println("you log out successfully");
 				break;
@@ -369,14 +415,6 @@ public class RunApp {
 			System.exit(0);
 		}
 	}
-	
-//	private static void listExistingAccount(List<Account> accounts) {
-//		for (Account account : accounts) {
-//			System.out.println("Account type: "+account.getTypeAccount()+" id: "+account.getId()+" username: "+account.getUsername()+" status: "+ account.getStatus());
-//		}
-//		
-//	}
-	
 	
 
 }

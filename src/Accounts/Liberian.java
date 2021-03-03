@@ -41,7 +41,7 @@ public class Liberian extends Account implements  Runnable {
 	}
 	
 	public void issueBook(BookItem bookToIssue, Member memberWhoBorrow) {
-		if(memberWhoBorrow.getStatus().equals(AccountStatus.Active) ) {
+		if(memberWhoBorrow.getStatus().equals(AccountStatus.Active.toString()) ) {
 			if(bookToIssue.getStatus().equals(BookStatus.available.toString())) {
 				bookToIssue.setStatus(BookStatus.borrowed.toString());
 				int borrowedBook = memberWhoBorrow.getTotalBookBorrored();
@@ -60,7 +60,7 @@ public class Liberian extends Account implements  Runnable {
 	
 	
 	public Liberian(Person person, String id, String password,String username, AccountStatus status, String accountType) {
-		super(person, id, password,username, status, accountType);
+		super(person, id, password,username, status.toString(), accountType);
 	}
 	public Liberian(String id, String password,String username, AccountStatus status) {
 		super(id, password,username, status);
@@ -89,7 +89,7 @@ public class Liberian extends Account implements  Runnable {
 		this.bookToIssue = bookToIssue;
 	}
 
-	public boolean addBook(List<BookItem> listBooks, Scanner scanner ) {
+	public BookItem addBook(List<BookItem> listBooks, Scanner scanner ) {
 		// precondition the book which has to be added should not exist in the list 
 		// Postcondition: an updated list of books listBooks which contains the new newBookItem
 		
@@ -107,7 +107,7 @@ public class Liberian extends Account implements  Runnable {
 				if(book instanceof BookItem) {
 					if(((BookItem)book).getBookId().equals(newBookItem.getBookId())) {// downcasting
 						System.out.println("that book exist already it cannot be added");
-						return false;
+						return null;
 					} else if(listBooks.size() == count) {
 						break;
 					}
@@ -115,10 +115,10 @@ public class Liberian extends Account implements  Runnable {
 			}
 			listBooks.add(newBookItem);
 			System.out.println("Book was sucessfully added");
-			return true;
+			return newBookItem;
 		}
 		System.out.println("Book was not sucessfully added");
-		return false;
+		return null;
 	
 	}
 	public boolean updateBook(List<Book> listBooks, BookItem bookToUpdate) {
@@ -171,14 +171,16 @@ public class Liberian extends Account implements  Runnable {
 	}
    /*help to add a new account to the list if the account does not exist yets
     * */
-	public void createAnAccount() {
+	public Account createAnAccount() {
 		//Precondition: the new account should not exist
 		// Postcondition: add a new account to a list of accounts
+		Account newlyCreatedAccount = null;
 		try {
-			captureAccoutInformation();
+			newlyCreatedAccount = captureAccoutInformation();
 		} catch (BadInputException e) {
 			System.out.println("you entered a wrong format value");
 		}
+		return newlyCreatedAccount;
 	}
 	
 	/*helps to go through the list of accounts and found the one to delete
@@ -306,18 +308,18 @@ public class Liberian extends Account implements  Runnable {
 		finally {
 			scanner.close();
 		}
-		writeNewBookInfoIntoTable(newBookInfo,true);// write the book information in the file
+		writeNewBookInfoIntoFile(newBookInfo,true);// write the book information in the file
 		return newBook;
 	}
 	
 	/*Function to write book information to the file
 	 * */
-	public void writeNewBookInfoIntoTable(String newBookInfo, boolean writeEndFile) {
+	public void writeNewBookInfoIntoFile(String newBookInfo, boolean writeEndFile) {
 		BufferedWriter bufferWrite = null;
 	      try {
 		 String mycontent = newBookInfo;
 	         
-		 File file = new File("booksTable.txt");//Specify the file name where to write
+		 File file = new File("booksFile.txt");//Specify the file name where to write
 
 		 /* check if the file exists if not it will be created*/
 		  if (!file.exists()) {
@@ -344,7 +346,7 @@ public class Liberian extends Account implements  Runnable {
 		
 	}
 	/*Collect all the information for the new account and save them in the binary file if the accountid does not exist*/
-	private void captureAccoutInformation() throws BadInputException {
+	private Account captureAccoutInformation() throws BadInputException {
 		
 		Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 		Person person = new Person();
@@ -420,6 +422,7 @@ public class Liberian extends Account implements  Runnable {
 		}
     
 		scanner.close();
+		return account;
 	}
 	
 	//Write in the binary file all accounts contain in the list

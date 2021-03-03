@@ -14,26 +14,25 @@ import Constants.AccountStatus;
  * */
 
 public abstract class Account implements Comparable<String>, Serializable {
-  /**
-	 * 
-	 */
+	
+
 	private static final long serialVersionUID = 1L;
-private Person person;
-  private String id;
-  private String username;
-  private String password;
-  private AccountStatus status;
-  private String typeAccount;
-  private String dateOfAccountCreation;
+	private Person person;
+	private String id;
+	private String username;
+	private String password;
+	private String status;
+	private String typeAccount;
+	private String dateOfAccountCreation;
   
   
-	public Account(Person person, String id, String password, String username, AccountStatus status, String typeAcc) {
+	public Account(Person person, String id, String password, String username, String status, String typeAcc) {
 		/*this constructor will help to instantiate child classes*/
 		super();
 		this.person = person;
 		this.id = id;
 		this.password = password;
-		this.setStatus(AccountStatus.Active);
+		this.setStatus(AccountStatus.Active.toString());
 		this.typeAccount = typeAcc;
 		this.username = username;
 		this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
@@ -45,17 +44,17 @@ private Person person;
 		super();
 		this.id = id;
 		this.password = password;
-		this.setStatus(AccountStatus.Active);
+		this.setStatus(AccountStatus.Active.toString());
 		this.username = username;
 		this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
 		
 	}
 		
 	  public Account() {
-		  this.setStatus(AccountStatus.Active);
+		  this.setStatus(AccountStatus.Active.toString());
 		  this.setDateOfAccountCreation(LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-		// TODO Auto-generated constructor stub
-	}
+	} 
+	  
 
 	public boolean resetPassword() {
 		  System.out.println("password reset successfully");
@@ -91,11 +90,11 @@ private Person person;
 		this.password = password;
 	  }
 		
-	  public AccountStatus getStatus() {
+	  public String getStatus() {
 		return status;
 	  }
 		
-	  public void setStatus(AccountStatus status) {
+	  public void setStatus(String status) {
 		this.status = status;
 	  }
 
