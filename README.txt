@@ -42,3 +42,11 @@ search for a book
 3.enter 9 from the main menu 
 4.enter the exact name or a part of the name of book'author you are look for: enter Robert
 5- a book information will be display in the console.
+
+Assigment 5:
+
+1- launch the application by running runApp.java
+2- that will create the DB and all necessary table
+3- use the file liberian.sql to import the data inside the database
+4- log in as liberian by choosing 1 with id:lib0231 and password:alpha01
+5-  you can choose from menu to add a book, list all book, add an account, list all account
